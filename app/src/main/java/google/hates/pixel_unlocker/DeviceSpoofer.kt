@@ -47,7 +47,6 @@ class DeviceSpoofer : IXposedHookLoadPackage {
     }
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
-
         log("Loaded DeviceSpoofer for ${lpparam?.packageName}")
         log("Device spoof: ${finalDeviceToSpoof?.deviceName}")
 
