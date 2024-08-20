@@ -1,17 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation">
-
-    <!--Things to update in new versions:
-
-    build.gradle: versionCode
-    build.gradle: versionName
-
-    update_info.json
-
-    changelog
-    -->
-
-    <string name="app_name">Pixelify GPhotos</string>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">Pixel Unlocker</string>
 
     <!--activity_main.xml-->
     <string name="reset">Reset</string>
@@ -45,9 +33,6 @@
         this app\'s logo has been updated to avoid any legal conflict.\n
     </string>
 
-    <!--menu_activity_main.xml-->
-    <string name="changelog">Change log</string>
-
     <!--ActivityMain.xml-->
     <string name="please_force_stop_google_photos">Please force stop Google Photos to take effect.</string>
     <string name="export_config">Export configuration</string>
@@ -77,7 +62,7 @@
     <string name="spoof_android_version_desc">Do not set an Android version greater than your current version.\n
         Example, if your Android version is <b>Pie</b>, you can set <b>Nougat / Oreo / Pie</b>, but not Q / R / S.
     </string>
-    <string name="this_might_cause_crash">This might cause Google Photos to immediately crash!</string>
+    <string name="this_might_cause_crash">This might cause spoofed Apps to immediately crash!</string>
     <string name="dont_spoof_android_version">Don\'t spoof Android version <b>(Recommended)</b></string>
     <string name="follow_spoof_device_version">Follow spoof device Android version.</string>
     <string name="manually_set_android_version">Manually set Android version.</string>
@@ -86,4 +71,9 @@
     <string name="killing_please_wait">Killing… please wait.</string>
     <string name="failed_to_stop_package">Failed to stop package. Please stop manually.</string>
     <string name="failed_to_launch_package">Failed to launch. Please start manually.</string>
+    <string name="ignore">Ignore</string>
+    <string name="quit">Quit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_app">Search app..</string>
 </resources>

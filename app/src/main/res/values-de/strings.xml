@@ -1,0 +1,76 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">Pixel Freischalter</string>
+
+    <!--activity_main.xml-->
+    <string name="reset">Zurücksetzen</string>
+    <string name="device_to_spoof">Zu simulierendes Gerät</string>
+    <string name="spoofs_build_and_features">Simuliert build.prop und Feature-Flags.</string>
+    <string name="customize_feature_flags">Feature-Flags anpassen.</string>
+    <string name="feature_flags_changed">Feature-Flags geändert!</string>
+    <string name="spoof_only_in_google_photos">Stelle sicher, dass die Simulation nur in Google Fotos erfolgt.</string>
+    <string name="spoof_only_in_google_photos_desc">In LSPosed ist das Modul standardmäßig nur für Google Fotos aktiviert.
+    Wenn du es in anderen Apps verwenden möchtest, lass diesen Schalter <b>AUS</b>.</string>
+    <string name="override_rom_feature_levels">ROM-Feature-Level überschreiben.</string>
+    <string name="override_rom_feature_levels_desc">Übergibt false an die gehookte Methode für höhere Feature-Level, die im ROM vorhanden sind,
+    wenn der Benutzer einen niedrigeren Pixel-Feature-Level auswählt. <b>(Empfohlen)</b></string>
+    <string name="force_stop_google_photos">Google Fotos\nbeenden erzwingen</string>
+    <string name="module_not_enabled">
+        \n
+        Sieht so aus, als ob dieses App-Modul nicht aktiviert ist.\n
+        Bitte aktiviere es in LSPosed / EdXposed und starte das Gerät neu.\n
+        Wenn es bereits aktiviert ist, starte einfach neu. Wenn das nicht funktioniert, deinstalliere und installiere es erneut.
+    </string>
+    <string name="close">Schließen</string>
+    <string name="open_google_photos">Google Fotos öffnen</string>
+    <string name="telegram_group">Telegram-Gruppe!</string>
+    <string name="update_available">App-Update verfügbar!</string>
+
+    <!--changelog-->
+    <string name="version_head">Version 4.1</string>
+    <string name="version_desc">
+        \n
+        # Angesichts der jüngsten Ereignisse, bei denen das Vanced-Projekt aufgrund der Verwendung des Youtube-Logos eingestellt wurde,
+        wurde das Logo dieser App aktualisiert, um Rechtsstreitigkeiten zu vermeiden.\n
+    </string>
+
+    <!--ActivityMain.xml-->
+    <string name="please_force_stop_google_photos">Bitte beende Google Fotos, damit die Änderungen wirksam werden.</string>
+    <string name="export_config">Konfiguration exportieren</string>
+    <string name="export_config_desc">Speichere oder teile deine Einstellungen dieses Moduls mit anderen.\n
+        \"Speichern\" fordert dich auf, einen Speicherort auszuwählen, um die Einstellungen als JSON-Datei zu exportieren.
+    </string>
+    <string name="export_complete">Export abgeschlossen!</string>
+    <string name="share">Teilen</string>
+    <string name="select_a_location">Wähle einen Speicherort zum Speichern aus.</string>
+    <string name="share_config_file">Konfigurationsdatei teilen</string>
+    <string name="import_config">Konfiguration importieren</string>
+    <string name="import_config_desc">Dies öffnet ein Systemfenster, um die Konfigurationsdatei auszuwählen.</string>
+    <string name="share_error">Fehler beim Teilen!</string>
+    <string name="read_error">Lesefehler! Stelle sicher, dass du eine gültige Datei ausgewählt hast!</string>
+    <string name="import_complete">Import abgeschlossen!</string>
+    <string name="advanced_options">Erweiterte Optionen</string>
+
+    <!--feature_customize.xml-->
+    <string name="save">Speichern</string>
+
+    <!--advanced_options_activity.xml-->
+    <string name="enable_verbose_logging">Ausführliche Protokollierung aktivieren</string>
+    <string name="enable_verbose_logging_desc">Mehr Debuginformationen in LSPosed / EdXposed-Protokollen und Android logcat.\n
+        Um Protokolle zu teilen, öffne LSPosed / EdXposed -> Protokolle -> oberes Speichern-Symbol. Teile dann die erstellte Datei.
+    </string>
+    <string name="spoof_android_version">Android-Version simulieren.</string>
+    <string name="spoof_android_version_desc">Lege keine Android-Version fest, die höher ist als deine aktuelle Version.\n
+        Beispiel: Wenn deine Android-Version <b>Pie</b> ist, kannst du <b>Nougat / Oreo / Pie</b> einstellen, aber nicht Q / R / S.
+    </string>
+    <string name="this_might_cause_crash">Dies könnte dazu führen, dass Google Fotos sofort abstürzt!</string>
+    <string name="dont_spoof_android_version">Android-Version nicht simulieren <b>(Empfohlen)</b></string>
+    <string name="follow_spoof_device_version">Simulierter Geräte-Android-Version folgen.</string>
+    <string name="manually_set_android_version">Android-Version manuell festlegen.</string>
+
+    <!--Utils.kt-->
+    <string name="killing_please_wait">Wird beendet… bitte warten.</string>
+    <string name="failed_to_stop_package">Paket konnte nicht beendet werden. Bitte manuell beenden.</string>
+    <string name="failed_to_launch_package">Start fehlgeschlagen. Bitte manuell starten.</string>
+    <string name="ignore">Ignorieren</string>
+    <string name="quit">Beenden</string>
+</resources>
