@@ -3,6 +3,7 @@ package google.hates.pixel_unlocker
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,19 +25,11 @@ import google.hates.pixel_unlocker.Constants.PREF_OVERRIDE_ROM_FEATURE_LEVELS
 import google.hates.pixel_unlocker.Constants.PREF_SPOOF_FEATURES_LIST
 import google.hates.pixel_unlocker.Constants.SHARED_PREF_FILE_NAME
 
-
 class FragmentMain : Fragment() {
 
-    private val pref by lazy {
-        try {
-            requireActivity().getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE)
-        } catch (_: Exception) {
-            null
-        }
-    }
+    private lateinit var pref: SharedPreferences
 
     private fun showRebootSnack() {
-        if (pref == null) return
         val rootView = requireView().findViewById<ScrollView>(R.id.root_view_for_snackbar)
         Snackbar.make(rootView, R.string.please_force_stop_google_photos, Snackbar.LENGTH_SHORT)
             .show()
@@ -52,118 +45,92 @@ class FragmentMain : Fragment() {
         }
     }
 
-    private val childActivityLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                showRebootSnack()
-            }
+    private val childActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            showRebootSnack()
         }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_main, container, false)
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        pref = requireActivity().getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE)
+            .also {
+                if (it == null) {
+                    AlertDialog.Builder(requireContext()).setMessage(R.string.module_not_enabled)
+                        .setPositiveButton(R.string.quit) { _, _ -> requireActivity().finish() }
+                        .setNegativeButton(R.string.ignore, null).setCancelable(false).show()
+                }
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO: It broke after converting activity to fragment, need to fix.
-        if (pref == null) {
-            AlertDialog.Builder(requireContext()).setMessage(R.string.module_not_enabled)
-                .setPositiveButton(R.string.quit) { _, _ ->
-                    requireActivity().finish()
-                }.setNegativeButton(R.string.ignore, null).setCancelable(false).show()
-        }
-
         val featureFlagsChanged = view.findViewById<TextView>(R.id.feature_flags_changed)
-        val overrideROMFeatureLevels =
-            view.findViewById<SwitchCompat>(R.id.override_rom_feature_levels)
+        val overrideROMFeatureLevels = view.findViewById<SwitchCompat>(R.id.override_rom_feature_levels)
         val deviceSpooferSpinner = view.findViewById<Spinner>(R.id.device_spoofer_spinner)
         val advancedOptions = view.findViewById<TextView>(R.id.advanced_options)
         val perAppSpoof = view.findViewById<LinearLayout>(R.id.per_app_spoof)
         val perAppSpoofText = view.findViewById<TextView>(R.id.per_app_spoof_text)
 
         fun updatePerAppSpoofText(selectedDeviceName: String) {
-            if (selectedDeviceName == "None") {
-                perAppSpoofText.text = getString(R.string.only_spoof_these_apps)
-            } else {
-                perAppSpoofText.text = getString(R.string.per_app_spoof)
-            }
+            perAppSpoofText.text = getString(if (selectedDeviceName == "None") R.string.only_spoof_these_apps else R.string.per_app_spoof)
         }
 
-        val selectedDeviceName = pref?.getString(PREF_DEVICE_TO_SPOOF, DeviceProps.defaultDeviceName)
-        if (selectedDeviceName != null) {
-            updatePerAppSpoofText(selectedDeviceName)
-        }
+        val selectedDeviceName = pref.getString(PREF_DEVICE_TO_SPOOF, DeviceProps.defaultDeviceName)
+        selectedDeviceName?.let { updatePerAppSpoofText(it) }
 
         setHasOptionsMenu(true)
 
         overrideROMFeatureLevels.apply {
-            isChecked = pref?.getBoolean(PREF_OVERRIDE_ROM_FEATURE_LEVELS, true) ?: false
+            isChecked = pref.getBoolean(PREF_OVERRIDE_ROM_FEATURE_LEVELS, true)
             setOnCheckedChangeListener { _, isChecked ->
-                pref?.edit()?.run {
-                    putBoolean(PREF_OVERRIDE_ROM_FEATURE_LEVELS, isChecked)
-                    apply()
-                    showRebootSnack()
-                }
+                pref.edit().putBoolean(PREF_OVERRIDE_ROM_FEATURE_LEVELS, isChecked).apply()
+                showRebootSnack()
             }
         }
 
-        perAppSpoof.apply {
-            setOnClickListener {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, AppSpecificSpoofingFragment())
-                    .addToBackStack(null).commit()
-            }
+        perAppSpoof.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AppSpecificSpoofingFragment())
+                .addToBackStack(null).commit()
+        }
 
-            deviceSpooferSpinner.apply {
-                val deviceNames = DeviceProps.allDevices.map { it.deviceName }
-                val aa = ArrayAdapter(
-                    requireContext(), android.R.layout.simple_spinner_item, deviceNames
-                )
+        deviceSpooferSpinner.apply {
+            val deviceNames = DeviceProps.allDevices.map { it.deviceName }
+            val aa = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, deviceNames)
+            aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter = aa
+            val defaultSelection = pref.getString(PREF_DEVICE_TO_SPOOF, DeviceProps.defaultDeviceName)
+            setSelection(aa.getPosition(defaultSelection), false)
 
-                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                adapter = aa
-                val defaultSelection =
-                    pref?.getString(PREF_DEVICE_TO_SPOOF, DeviceProps.defaultDeviceName)
-                setSelection(aa.getPosition(defaultSelection), false)
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val deviceName = aa.getItem(position) ?: return
+                    updatePerAppSpoofText(deviceName)
 
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?, view: View?, position: Int, id: Long
-                    ) {
-                        val deviceName = aa.getItem(position)
-                        if (deviceName != null) {
-                            updatePerAppSpoofText(deviceName)
-                        }
-
-                        pref?.edit()?.apply {
-                            putString(PREF_DEVICE_TO_SPOOF, deviceName)
-                            putStringSet(
-                                PREF_SPOOF_FEATURES_LIST,
-                                DeviceProps.getFeaturesUpToFromDeviceName(deviceName)
-                            )
-                            apply()
-                        }
-
-                        peekFeatureFlagsChanged(featureFlagsChanged)
-                        showRebootSnack()
+                    pref.edit().apply {
+                        putString(PREF_DEVICE_TO_SPOOF, deviceName)
+                        putStringSet(PREF_SPOOF_FEATURES_LIST, DeviceProps.getFeaturesUpToFromDeviceName(deviceName))
+                        apply()
                     }
 
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    peekFeatureFlagsChanged(featureFlagsChanged)
+                    showRebootSnack()
                 }
-            }
 
-            advancedOptions.apply {
-                paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                setOnClickListener {
-                    childActivityLauncher.launch(
-                        Intent(
-                            requireContext(), AdvancedOptionsActivity::class.java
-                        )
-                    )
-                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+        }
+
+        advancedOptions.apply {
+            paintFlags = Paint.UNDERLINE_TEXT_FLAG
+            setOnClickListener {
+                childActivityLauncher.launch(Intent(requireContext(), AdvancedOptionsActivity::class.java))
             }
         }
     }
