@@ -64,9 +64,10 @@
             android:paddingTop="10dp">
 
             <TextView
+                android:id="@+id/per_app_spoof_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Per App Spoof"
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </LinearLayout>

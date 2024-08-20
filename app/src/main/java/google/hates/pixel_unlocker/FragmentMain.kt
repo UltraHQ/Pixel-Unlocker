@@ -82,6 +82,20 @@ class FragmentMain : Fragment() {
         val deviceSpooferSpinner = view.findViewById<Spinner>(R.id.device_spoofer_spinner)
         val advancedOptions = view.findViewById<TextView>(R.id.advanced_options)
         val perAppSpoof = view.findViewById<LinearLayout>(R.id.per_app_spoof)
+        val perAppSpoofText = view.findViewById<TextView>(R.id.per_app_spoof_text)
+
+        fun updatePerAppSpoofText(selectedDeviceName: String) {
+            if (selectedDeviceName == "None") {
+                perAppSpoofText.text = getString(R.string.only_spoof_these_apps)
+            } else {
+                perAppSpoofText.text = getString(R.string.per_app_spoof)
+            }
+        }
+
+        val selectedDeviceName = pref?.getString(PREF_DEVICE_TO_SPOOF, DeviceProps.defaultDeviceName)
+        if (selectedDeviceName != null) {
+            updatePerAppSpoofText(selectedDeviceName)
+        }
 
         setHasOptionsMenu(true)
 
@@ -120,6 +134,10 @@ class FragmentMain : Fragment() {
                         parent: AdapterView<*>?, view: View?, position: Int, id: Long
                     ) {
                         val deviceName = aa.getItem(position)
+                        if (deviceName != null) {
+                            updatePerAppSpoofText(deviceName)
+                        }
+
                         pref?.edit()?.apply {
                             putString(PREF_DEVICE_TO_SPOOF, deviceName)
                             putStringSet(
